@@ -1,17 +1,32 @@
-const body = document.querySelector('body');
-const div1 = document.createElement('div');
-const div2 = document.createElement('div');
-const div3 = document.createElement('div');
-div1.style.width = "100px";
-div1.style.height = "100px";
-div1.style.backgroundColor = "goldenrod";
-div2.style.width = "100px";
-div2.style.height = "100px";
-div2.style.backgroundColor = "goldenrod";
-div3.style.width = "100px";
-div3.style.height = "100px";
-div3.style.backgroundColor = "goldenrod";
-let divPut1 = body.appendChild(div1);
-let divPut2 = body.appendChild(div2);
-let divPut3 = body.appendChild(div3);
-console.log(body)
+import React, {useEffect, useState} from 'react';
+import ReactDOM from 'react-dom';
+
+function RandomBeer() {
+    const [name, setName] = useState();
+    const [volumeValue, setVolumeValue] = useState();
+    const [volumeUnit, setVolumeUnit] = useState();
+    
+    useEffect(()=> {
+        fetch('https://api.punkapi.com/v2/beers/random')
+        .then(results => results.json())
+        .then(data => {
+            setName(data[0].name)
+            const {volume} = data[0];
+            setVolumeValue(volume.value);
+            setVolumeUnit(volume.unit)
+        })
+    }, []) //this [] prevents data being fetched over nad over again
+
+    return(
+            <div>
+                {name}: {volumeValue} {volumeUnit}
+            </div>
+        )
+}
+
+
+
+ReactDOM.render(
+    <RandomBeer/>,
+    document.getElementById('root')
+)
